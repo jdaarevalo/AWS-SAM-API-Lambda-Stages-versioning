@@ -117,6 +117,8 @@ Resources:
 ##########################################################################
   DeploymentDev:
     Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - RootMethodPOST
     Properties:
       RestApiId: !Ref TestApi
       Description: 'Deployment for Dev Alias'

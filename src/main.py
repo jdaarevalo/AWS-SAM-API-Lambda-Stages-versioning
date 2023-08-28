@@ -7,7 +7,7 @@ def lambda_handler(event, _):
     lambda_version = "version_prd"
 
     ## Rename the version name in the second deployment
-    lambda_version = "version_dev"
+    # lambda_version = "version_dev"
 
     return {
         'statusCode': 200,
