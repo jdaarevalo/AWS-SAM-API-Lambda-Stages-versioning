@@ -1,0 +1,150 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Stack to test integration between API Gateway and Lambda to invoke an specific version.
+
+
+Parameters:
+  Environment:
+    Type: String
+    Default: staging
+    Description: Environment Name
+
+Resources:
+##########################################################################
+# User Role
+##########################################################################
+  TestApiGatewayLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: latana.role.lambda.TestApiGatewayLambdaRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchFullAccess
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess
+
+##########################################################################
+# Lambda Function
+##########################################################################
+  TestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: main.lambda_handler
+      Runtime: python3.10
+      Role: !GetAtt TestApiGatewayLambdaRole.Arn
+      Timeout: 300
+      MemorySize: 512
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ENVIRONMENT_NAME: !Ref Environment
+      VersionDescription: "this is the first release"
+      AutoPublishAlias: dev
+      Events:
+        APIFunction:
+          Type: Api
+          Properties:
+            Path: /my_endpoint
+            Method: post
+            RestApiId:
+              Ref: TestApi
+
+##########################################################################
+# Lambda Aliases
+
+## Remove comments in the second deploy
+
+##########################################################################
+  # ProdAlias:
+  #   Type: AWS::Lambda::Alias
+  #   Properties:
+  #     FunctionName: !Ref TestFunction
+  #     FunctionVersion: "1"
+  #     Name: prd
+
+##########################################################################
+# REST API
+##########################################################################
+  TestApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: test-apigw-lambda-stages
+      Description: REST API demo to test Stages
+
+##########################################################################
+# REST API Resources
+##########################################################################
+  TestApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref TestApi
+      ParentId: !GetAtt [TestApi, RootResourceId]
+      PathPart: my_endpoint  # match with the path in Lambda Events
+
+##########################################################################
+# REST API Method
+##########################################################################
+  RootMethodPOST:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref TestApi
+      ResourceId: !Ref TestApiResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ApiKeyRequired: False
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri:
+          Fn::Join: 
+            - ''
+            - - 'arn:aws:apigateway:'
+              - !Ref 'AWS::Region'
+              - ':lambda:path/2015-03-31/functions/'
+              - !GetAtt TestFunction.Arn
+              - ':${stageVariables.lambdaAlias}/invocations'
+
+##########################################################################
+# REST API stages and deploys
+##########################################################################
+  DeploymentDev:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - RootMethodPOST
+    Properties:
+      RestApiId: !Ref TestApi
+      Description: 'Deployment for Dev Alias'
+
+  StageDev:  
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: dev
+      RestApiId: !Ref TestApi
+      DeploymentId: !Ref DeploymentDev
+      Variables: 
+        lambdaAlias: dev
+  
+  # DeploymentProd:
+  #   Type: AWS::ApiGateway::Deployment
+  #   DependsOn:
+  #     - RootMethodPOST
+  #   Properties:
+  #     RestApiId: !Ref TestApi
+  #     Description: 'Deployment for Prod Alias'
+
+  # StageProd:  
+  #   Type: AWS::ApiGateway::Stage
+  #   Properties:
+  #     StageName: prod
+  #     RestApiId: !Ref TestApi
+  #     DeploymentId: !Ref DeploymentProd
+  #     Variables: 
+  #       lambdaAlias: prd
