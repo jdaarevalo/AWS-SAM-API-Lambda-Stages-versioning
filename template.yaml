@@ -62,12 +62,12 @@ Resources:
 ## Remove comments in the second deploy
 
 ##########################################################################
-  V202308Alias:
-    Type: AWS::Lambda::Alias
-    Properties:
-      FunctionName: !Ref TestFunction
-      FunctionVersion: "2"
-      Name: v_2023_08
+  # V202308Alias:
+  #   Type: AWS::Lambda::Alias
+  #   Properties:
+  #     FunctionName: !Ref TestFunction
+  #     FunctionVersion: "2"
+  #     Name: v_2023_08
 
 ##########################################################################
 # REST API
