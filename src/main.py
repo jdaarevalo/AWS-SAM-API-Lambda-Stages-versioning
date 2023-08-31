@@ -5,6 +5,7 @@ def lambda_handler(event, _):
     # Introduce Lambda logic
     
     # lambda_version = "stable version v_2023_08"
+    # one comment
     lambda_version = "dev version"
 
     return {

@@ -17,7 +17,7 @@ Resources:
   TestApiGatewayLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: latana.role.lambda.TestApiGatewayLambdaRole
+      RoleName: tests.role.lambda.TestApiGatewayLambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -46,7 +46,6 @@ Resources:
       Environment:
         Variables:
           ENVIRONMENT_NAME: !Ref Environment
-      VersionDescription: "this is the first release"
       AutoPublishAlias: dev
       Events:
         APIFunction:
