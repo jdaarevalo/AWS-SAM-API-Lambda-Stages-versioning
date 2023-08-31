@@ -3,8 +3,10 @@ import json
 
 def lambda_handler(event, _):
     # Introduce Lambda logic
-    ## First lambda version
-    lambda_version = "version_prd"
+    
+    # lambda_version = "stable version v_2023_08"
+    # one comment
+    lambda_version = "dev version"
 
     return {
         'statusCode': 200,
