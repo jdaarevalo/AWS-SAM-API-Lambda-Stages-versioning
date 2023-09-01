@@ -1,5 +1,7 @@
 # AWS-SAM-API-Lambda-Stages-Versioning
 
+![AWS-SAM-API-Lambda-versioning](https://github.com/jdaarevalo/AWS-SAM-API-Lambda-Stages-versioning/assets/2475570/ae869d38-c4d8-4852-9602-83be540a3b68)
+
 ## Overview
 
 This repository provides a robust solution for managing multiple environments and versions in AWS Lambda functions and API Gateway, utilizing the AWS Serverless Application Model (SAM). It's designed to meet the needs of Data Engineers who require flexible, scalable, and maintainable data serving layers.
