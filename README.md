@@ -60,7 +60,7 @@ sam local invoke -e tests/events/event.json
 
 Once deployed, you can call the API Gateway URL to invoke different versions of the Lambda function based on the stage you specify.
 
-For detailed instructions, please refer to the [blog post](https://aws.plainenglish.io/scalable-data-processing-with-aws-serverless-scatter-gather-pattern-implementation-63d25d6f6d23).
+For detailed instructions, please refer to the [blog post](https://aws.plainenglish.io/serving-data-safely-managing-versions-and-environments-with-api-gateway-and-lambda-eee86bef7e05).
 
 ## Contributing
 
