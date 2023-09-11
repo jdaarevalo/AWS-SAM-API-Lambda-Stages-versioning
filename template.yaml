@@ -17,7 +17,7 @@ Resources:
   TestApiGatewayLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: tests.role.lambda.TestApiGatewayLambdaRole
+      RoleName: latana.role.lambda.TestApiGatewayLambdaRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -62,12 +62,12 @@ Resources:
 ## Remove comments in the second deploy
 
 ##########################################################################
-  # V202308Alias:
-  #   Type: AWS::Lambda::Alias
-  #   Properties:
-  #     FunctionName: !Ref TestFunction
-  #     FunctionVersion: "2"
-  #     Name: v_2023_08
+  V202308Alias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Ref TestFunction
+      FunctionVersion: "2"
+      Name: v_2023_08
 
 ##########################################################################
 # REST API
@@ -148,6 +148,9 @@ Resources:
 ##########################################################################
 # REST API Resources to version: v_2023_08
 # stage and deployment + Lambda::Permission
+
+## Remove comments in the second deploy
+
 ##########################################################################
   DeploymentV202308:
     Type: AWS::ApiGateway::Deployment
